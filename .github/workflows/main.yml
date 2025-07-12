@@ -59,14 +59,14 @@ jobs:
         chmod 600 key.pem
 
     - name: Deploy to EC2
-  run: |
-    echo "${{ secrets.EC2 }}" > key.pem
-    chmod 600 key.pem
-
-    scp -o StrictHostKeyChecking=no -i key.pem ./backend/.env ${{ secrets.EC2USER }}@${{ secrets.EC2HOST }}:/home/${{ secrets.EC2USER }}/wecheck/.env || echo "Skipping .env upload (if already exists)"
-
-    ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2USER }}@${{ secrets.EC2HOST }} << 'EOF'
-      cd wecheck || git clone https://github.com/LexieChen1/wecheck.git && cd wecheck
-      docker compose down
-      docker compose up -d --build
-EOF
+      run: |
+        echo "${{ secrets.EC2 }}" > key.pem
+        chmod 600 key.pem
+    
+        scp -o StrictHostKeyChecking=no -i key.pem ./backend/.env ${{ secrets.EC2USER }}@${{ secrets.EC2HOST }}:/home/${{ secrets.EC2USER }}/wecheck/.env || echo "Skipping .env upload (if already exists)"
+    
+        ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2USER }}@${{ secrets.EC2HOST }} << 'EOF'
+          cd wecheck || git clone https://github.com/LexieChen1/wecheck.git && cd wecheck
+          docker compose down
+          docker compose up -d --build
+    EOF
