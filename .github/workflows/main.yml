@@ -44,3 +44,25 @@ jobs:
         else
           echo "No backend package.json found"
         fi
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up SSH key
+      run: |
+        echo "${{ secrets.EC2 }}" > key.pem
+        chmod 600 key.pem
+
+    - name: Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2USER }}@${{ secrets.EC2HOST }} << 'EOF'
+          cd wecheck || (git clone https://github.com/LexieChen1/wecheck.git && cd wecheck)
+          git pull origin main
+          docker compose down
+          docker compose up -d --build
+        EOF
