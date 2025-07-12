@@ -69,4 +69,4 @@ jobs:
           cd wecheck || git clone https://github.com/LexieChen1/wecheck.git && cd wecheck
           docker compose down
           docker compose up -d --build
-    EOF
+          EOF
