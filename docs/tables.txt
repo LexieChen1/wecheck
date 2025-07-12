@@ -1,0 +1,70 @@
+1. users table
+sqlusers {
+  id: SERIAL PRIMARY KEY
+  email: VARCHAR(255) UNIQUE NOT NULL
+  password_hash: VARCHAR(255) NOT NULL
+  first_name: VARCHAR(100) NOT NULL
+  last_name: VARCHAR(100) NOT NULL
+  phone: VARCHAR(20)
+  avatar_url: VARCHAR(255)
+  created_at: TIMESTAMP DEFAULT NOW()
+  updated_at: TIMESTAMP DEFAULT NOW()
+}
+2. groups table
+sqlgroups {
+  id: SERIAL PRIMARY KEY
+  name: VARCHAR(255) NOT NULL
+  description: TEXT
+  created_by: INTEGER REFERENCES users(id)
+  group_type: ENUM('trip', 'dining', 'household', 'other')
+  created_at: TIMESTAMP DEFAULT NOW()
+  updated_at: TIMESTAMP DEFAULT NOW()
+}
+3. group_members table (Many-to-Many)
+sqlgroup_members {
+  id: SERIAL PRIMARY KEY
+  group_id: INTEGER REFERENCES groups(id) ON DELETE CASCADE
+  user_id: INTEGER REFERENCES users(id) ON DELETE CASCADE
+  role: ENUM('admin', 'member') DEFAULT 'member'
+  joined_at: TIMESTAMP DEFAULT NOW()
+  
+  UNIQUE(group_id, user_id)  -- Prevent duplicate memberships
+}
+4. expenses table
+sqlexpenses {
+  id: SERIAL PRIMARY KEY
+  group_id: INTEGER REFERENCES groups(id) ON DELETE CASCADE
+  paid_by: INTEGER REFERENCES users(id)
+  amount: DECIMAL(10,2) NOT NULL
+  description: VARCHAR(255) NOT NULL
+  category: VARCHAR(100)
+  expense_date: DATE NOT NULL
+  receipt_url: VARCHAR(255)
+  split_type: ENUM('equal', 'exact', 'percentage') DEFAULT 'equal'
+  created_at: TIMESTAMP DEFAULT NOW()
+  updated_at: TIMESTAMP DEFAULT NOW()
+}
+5. expense_splits table
+sqlexpense_splits {
+  id: SERIAL PRIMARY KEY
+  expense_id: INTEGER REFERENCES expenses(id) ON DELETE CASCADE
+  user_id: INTEGER REFERENCES users(id)
+  amount_owed: DECIMAL(10,2) NOT NULL
+  is_settled: BOOLEAN DEFAULT FALSE
+  settled_at: TIMESTAMP NULL
+  
+  -- Each user can only have one split per expense
+  UNIQUE(expense_id, user_id)
+}
+6. settlements table (Payment tracking)
+sqlsettlements {
+  id: SERIAL PRIMARY KEY
+  from_user: INTEGER REFERENCES users(id)
+  to_user: INTEGER REFERENCES users(id)
+  group_id: INTEGER REFERENCES groups(id)
+  amount: DECIMAL(10,2) NOT NULL
+  description: VARCHAR(255)
+  settlement_date: DATE DEFAULT CURRENT_DATE
+  created_at: TIMESTAMP DEFAULT NOW()
+}
+
