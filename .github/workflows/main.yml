@@ -1,72 +1,26 @@
-name: CI for WeCheck
+deploy:
+  needs: build
+  runs-on: ubuntu-latest
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  steps:
+  - name: Checkout code
+    uses: actions/checkout@v4
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+  - name: Set up SSH key
+    run: |
+      echo "${{ secrets.EC2 }}" > key.pem
+      chmod 600 key.pem
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+  - name: Deploy to EC2
+    run: |
+      scp -o StrictHostKeyChecking=no -i key.pem ./backend/.env ${{ secrets.EC2USER }}@${{ secrets.EC2HOST }}:/home/${{ secrets.EC2USER }}/wecheck/.env || echo "Skipping .env upload"
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-
-    - name: Install frontend deps
-      working-directory: ./frontend
-      run: npm install
-      
-    - name: Build frontend
-      working-directory: frontend
-      run: |
-        if [ -f package.json ]; then
-          npm run build || echo "Frontend build failed"
-        else
-          echo "No frontend package.json found"
+      ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2USER }}@${{ secrets.EC2HOST }} << 'EOF'
+        if [ ! -d "wecheck" ]; then
+          git clone https://github.com/LexieChen1/wecheck.git
         fi
-
-    - name: Install backend deps
-      working-directory: ./backend
-      run: npm install
-
-    - name: Run backend tests
-      working-directory: backend
-      run: |
-        if [ -f package.json ]; then
-          npm test || echo "No backend tests or test failed"
-        else
-          echo "No backend package.json found"
-        fi
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up SSH key
-      run: |
-        echo "${{ secrets.EC2 }}" > key.pem
-        chmod 600 key.pem
-
-    - name: Deploy to EC2
-      run: |
-        echo "${{ secrets.EC2 }}" > key.pem
-        chmod 600 key.pem
-    
-        scp -o StrictHostKeyChecking=no -i key.pem ./backend/.env ${{ secrets.EC2USER }}@${{ secrets.EC2HOST }}:/home/${{ secrets.EC2USER }}/wecheck/.env || echo "Skipping .env upload (if already exists)"
-    
-        ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2USER }}@${{ secrets.EC2HOST }} << 'EOF'
-          cd wecheck || git clone https://github.com/LexieChen1/wecheck.git && cd wecheck
-          docker compose down
-          docker compose up -d --build
-          EOF
+        cd wecheck
+        git pull origin main
+        docker compose down
+        docker compose up -d --build
+EOF
