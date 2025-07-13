@@ -11,7 +11,7 @@
 - ✉️ **Email Notifications** — Reminders and summaries for unpaid bills or overdue chores.
 - ☁️ **Cloud Deployment** — Dockerized and deployed on AWS EC2 for performance and scalability.
 
-👉 [https://wecheckapp.vercel.app](https://wecheckapp.vercel.app)
+👉 [https://wecheckapp.vercel.app](https://wecheck-app.vercel.app/)
 
 ## 🛠️ Tech Stack
 
