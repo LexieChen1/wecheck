@@ -6,20 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-<<<<<<< HEAD
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
-=======
-    "preview": "vite preview",
-    "test": "vitest"
-  },
-  "dependencies": {
-    "axios": "^1.9.0",
->>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
     "enhanced-resolve": "^5.18.2",
     "esbuild": "^0.25.5",
     "firebase-admin": "^13.4.0",
