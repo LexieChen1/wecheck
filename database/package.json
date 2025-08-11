@@ -1,0 +1,10 @@
+{
+  "name": "database",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Database configuration for GameOn",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "pg": "^8.16.3"
+  }
+}
