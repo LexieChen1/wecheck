@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { auth } from "./firebase";
 import {
   GoogleAuthProvider,
@@ -35,3 +36,38 @@ export const signInWithGithub = async (firstName, lastName) => {
   await upsertUser(user, firstName, lastName);
   return user;
 };
+=======
+import { auth } from "./firebase"; 
+
+import {
+    GoogleAuthProvider,
+    GithubAuthProvider,
+    signInWithPopup,
+} from 'firebase/auth';
+
+const googleProvider = new GoogleAuthProvider(); 
+const githubProvider = new GithubAuthProvider(); 
+
+
+let googleLogin = false; 
+export const signInWithGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    console.log('Google login success:', result.user);
+    return result; // ✅ RETURN IT
+  } catch (error) {
+    console.error('Google login error:', error); 
+    return null;
+  }
+};
+
+export const signInWithGithub = async () => {
+    try {
+      const result = await signInWithPopup(auth, githubProvider);
+      console.log('GitHub login success:', result.user);
+      return result;
+    } catch (error) {
+      console.error('GitHub login error:', error);
+    }
+  };
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce

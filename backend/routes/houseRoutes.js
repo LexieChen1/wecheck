@@ -1,20 +1,35 @@
 import express from "express";
+<<<<<<< HEAD
 import { authenticateUser as verifyToken } from "../middleware/auth.js";
 import pool from "../../database/index.js";
+=======
+import verifyToken from "../middleware/auth.js";
+import pool from "../database/index.js";
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
 import { nanoid } from "nanoid";
 
 const router = express.Router();
 
+<<<<<<< HEAD
 router.post("/", verifyToken, async (req, res) => {
   const { name,  start_date, end_date  } = req.body;
+=======
+router.post("/create", verifyToken, async (req, res) => {
+  const { name, start_date, end_date } = req.body;
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
   const uid = req.user.uid;
   const inviteCode = nanoid(6); // optional: short code to invite others
   
 
   try {
     const result = await pool.query(
+<<<<<<< HEAD
       `INSERT INTO houses (name, created_by_uid, invite_code, start_date, end_date)
        VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+=======
+     `INSERT INTO houses (name, created_by_uid, invite_code, start_date, end_date)
+      VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
       [name, uid, inviteCode, start_date, end_date]
     );
 
@@ -63,6 +78,7 @@ router.post("/join", verifyToken, async (req, res) => {
 
 router.patch('/leave-house', verifyToken, async (req, res) => {
   const uid = req.user.uid;
+<<<<<<< HEAD
   
   try {
     // First, get the user's current house_id
@@ -632,5 +648,11 @@ router.delete("/buylist/:itemId", verifyToken, async (req, res) => {
     res.status(500).json({ error: "Failed to delete item" });
   }
 });
+=======
+  await pool.query("UPDATE users SET house_id = NULL WHERE uid = $1", [uid]);
+  res.json({ message: "Left house" });
+});
+
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
 
 export default router;

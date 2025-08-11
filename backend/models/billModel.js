@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import pool from '../../database/index.js';
+=======
+import pool from '../database/index.js';
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
 
 export const createBillInDb = async ({ tripId, description, amount, paidBy, splitType }) => {
     const result = await pool.query(

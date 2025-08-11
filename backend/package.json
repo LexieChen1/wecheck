@@ -4,8 +4,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+<<<<<<< HEAD
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.js"
+=======
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest"
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
   },
   "keywords": [],
   "author": "",
@@ -15,15 +21,28 @@
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
+<<<<<<< HEAD
     "dotenv": "^10.0.0",
+=======
+    "dotenv": "^16.5.0",
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
     "express": "^5.1.0",
     "express-validator": "^7.0.1",
     "firebase-admin": "^13.4.0",
     "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.1.5",
+<<<<<<< HEAD
     "pg": "^8.16.3"
+=======
+    "pg": "^8.16.2"
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
   }
+<<<<<<< HEAD
+=======
+
+  
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
 }

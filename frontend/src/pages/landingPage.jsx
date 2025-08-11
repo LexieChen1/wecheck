@@ -15,6 +15,15 @@ export default function LandingPage() {
         {/*nav bars */}
         <nav className="space-x-2">
           <Link
+<<<<<<< HEAD
+=======
+            to="/quicksplit"
+            className="bg-neutral-500 hover:bg-neutral-900 text-white font-mono py-1 px-2 rounded transition transform hover:scale-105"
+          >
+            Quick Split
+          </Link>
+          <Link
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
             to="/login"
             className="bg-neutral-500 hover:bg-neutral-900 text-white font-mono py-1 px-2 rounded transition transform hover:scale-105"
           >
@@ -53,7 +62,11 @@ export default function LandingPage() {
       </p>
 
       <p className="text-lg text-grey font-serif max-w-xs mx-auto mt-7">
+<<<<<<< HEAD
       Track chores, split bills, and stay connected; at home or away.
+=======
+      Track chores, split bills, and stay connected
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
       </p>
       </main>
 

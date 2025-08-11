@@ -4,6 +4,7 @@
 
 body {
     margin: 0;
+<<<<<<< HEAD
 }
 
 /* Success notification animation */
@@ -21,3 +22,6 @@ body {
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
 }
+=======
+  }
+>>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
