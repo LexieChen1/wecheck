@@ -1,9 +1,5 @@
-import React from 'react'; 
-<<<<<<< HEAD
+import React from 'react';
 import { Outlet, useNavigate, NavLink } from "react-router-dom";
-=======
-import { Link, Outlet, useNavigate } from "react-router-dom";
->>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
 import { auth } from "../../auth/firebase";
 import { signOut } from "firebase/auth"; 
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -13,32 +9,23 @@ export default function Layout(){
     const navigate = useNavigate(); 
     const [user] = useAuthState(auth);
 
-<<<<<<< HEAD
     const base =
       "inline-block text-white font-mono py-1 px-2 rounded transition transform hover:scale-105";
     const getClass = ({ isActive }) =>
       `${base} ${isActive ? "bg-neutral-900" : "bg-neutral-500 hover:bg-neutral-900"}`;
-
-=======
->>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
     const handleLogout = async () => {
         try {
             await signOut(auth);
             toast.success("Logged out successfully!"); 
             navigate("/"); 
         } catch (err) {
-<<<<<<< HEAD
             toast.error("Logout Failed");
-=======
-            toast.error("Logout Failed")
->>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
         }
     }; 
 
     return (
         <div className="min-h-screen bg-cover bg-center bg-no-repeat bg-[url('/assets/background.jpg')] text-center flex flex-col justify-between font-sans">
           <header className="flex justify-between items-center p-3 bg-white bg-opacity-80 border-b-2 border-gray-300">
-<<<<<<< HEAD
             <div className="flex items-center space-x-2 bg-transparent">
               <img
                 src="/logo.png"
@@ -66,34 +53,6 @@ export default function Layout(){
               <button
                 onClick={handleLogout}
                 className={`${base} bg-neutral-500 hover:bg-neutral-900`}
-=======
-            <div className="flex items-center space-x-2">
-                <img src="/logo.png" alt="Logo" className="w-8 h-8" />
-                <h1 className="text-xl font-mono">WeCheck</h1>
-            </div>
-            <nav className="space-x-2">
-              <Link
-                to="/dashboard"
-                className="inline-block bg-neutral-500 hover:bg-neutral-900 text-white font-mono py-1 px-2 rounded transition transform hover:scale-105"
-              >
-                Dashboard
-              </Link>
-              <Link
-                to="/addHouse"
-                className="inline-block bg-neutral-500 hover:bg-neutral-900 text-white font-mono py-1 px-2 rounded transition transform hover:scale-105"
-              >
-                Add House
-              </Link>
-              <Link
-                to="/addEvent"
-                className="inline-block bg-neutral-500 hover:bg-neutral-900 text-white font-mono py-1 px-2 rounded transition transform hover:scale-105"
-              >
-                Add Trip
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="bg-neutral-500 hover:bg-neutral-900 text-white font-mono py-1 px-2 rounded transition transform hover:scale-105"
->>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
               >
                 Logout
               </button>
@@ -105,8 +64,5 @@ export default function Layout(){
           </main>
         </div>
       );
-<<<<<<< HEAD
 }
-=======
 }
->>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
