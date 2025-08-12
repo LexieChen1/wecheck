@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import pool from '../../database/index.js';
-=======
-import pool from '../database/index.js';
->>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
 
 export const createUser = async ({ firstName, lastName, email, passwordHash, phone, avatarUrl }) => {
   const result = await pool.query(
@@ -30,7 +26,6 @@ export const getAllUsers = async () => {
      ORDER BY created_at DESC`
   );
   return result.rows;
-<<<<<<< HEAD
 };
 
 export const getUserByUid = async (uid) => {
@@ -74,6 +69,4 @@ export const upsertUserByUid = async ({ uid, email, firstName, lastName, phone, 
     console.error("Error constraint:", error.constraint);
     throw error;
   }
-=======
->>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
 };

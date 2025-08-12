@@ -63,7 +63,6 @@ router.post("/join", verifyToken, async (req, res) => {
 
 router.patch('/leave-house', verifyToken, async (req, res) => {
   const uid = req.user.uid;
-<<<<<<< HEAD
   
   try {
     // First, get the user's current house_id
