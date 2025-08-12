@@ -259,7 +259,6 @@ export default function Dashboard() {
       </div>
     </div>
   );
-<<<<<<< HEAD
 }
 
 // ─── Reusable Components ──────────────────────────────────────
@@ -281,6 +280,4 @@ function List({ items, italic = false }) {
       ))}
     </ul>
   );
-=======
->>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
 }
