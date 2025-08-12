@@ -1,34 +1,15 @@
-<<<<<<< HEAD
-# Node.js dependencies
+serviceAccountKey.json
 node_modules/
-
-# Local environment config
 .env
 .env.local
 .env.*.local
-
-# Firebase service keys
-serviceAccountKey.json
-
-# Database
-*.sqlite
-*.db
-*.sql
-
-# Build and logs
-dist/
-build/
-*.log
-
-# OS files
-.DS_Store
-Thumbs.dbbackend/serviceAccountKey.json
-frontend/src/auth/firebase.js
-=======
-serviceAccountKey.json
-node_modules/
-.env
 .DS_Store
 frontend/node_modules/
 backend/node_modules/
->>>>>>> bcf2f07dd586d7e049c78dd997b95b0726a6acce
+dist/
+build/
+*.log
+*.sqlite
+*.db
+*.sql
+frontend/src/auth/firebase.js
