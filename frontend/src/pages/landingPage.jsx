@@ -6,7 +6,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat bg-[url('/assets/background.jpg')] text-center flex flex-col justify-between font-sans">
-      <header className="flex justify-between items-center p-3 bg-white bg-opacity-80 border-b-2 border-grey">
+      <header className="flex justify-between items-center p-3 bg-white bg-opacity-80 border-b-2 border-gray-300">
         <div className="flex items-center space-x-2">
           <img src="/logo.png" alt="Logo" className="w-8 h-8" />
           <h1 className="text-xl font-mono">WeCheck</h1>
@@ -14,15 +14,6 @@ export default function LandingPage() {
 
         {/*nav bars */}
         <nav className="space-x-2">
-          <Link
-            className="bg-neutral-500 hover:bg-neutral-900 text-white font-mono py-1 px-2 rounded transition transform hover:scale-105"
-          >
-            Login
-          </Link>
-          <Link
-            to="/signup"
-            className="bg-neutral-500 hover:bg-neutral-900 text-white font-mono py-1 px-2 rounded transition transform hover:scale-105"
-          >
           <Link
             to="/login"
             className="bg-neutral-500 hover:bg-neutral-900 text-white font-mono py-1 px-2 rounded transition transform hover:scale-105"
@@ -35,13 +26,11 @@ export default function LandingPage() {
           >
             Sign Up
           </Link>
-            Sign Up
-          </Link>
         </nav>
       </header>
 
       <main className="flex flex-col items-center justify-center flex-grow px-4 bg-white bg-opacity-80">
-      <p className="text-1xl font-sans text-forest mb-3">YOUR NEW LIFE AGENT</p>
+      <p className="text-1xl font-sans text-forest mb-3">LIVE STRESSFREE</p>
       {/* main statement with highlights*/}
       <p className="text-5xl font-mono font-black text-black mb-2">
         Share smarter.
@@ -64,9 +53,7 @@ export default function LandingPage() {
       </p>
 
       <p className="text-lg text-grey font-serif max-w-xs mx-auto mt-7">
-        <p className="text-lg text-grey font-serif max-w-xs mx-auto mt-7">
-          Track chores, split bills, and stay connected; at home or away.
-        </p>
+      Track chores, split bills, and stay connected; at home or away.
       </p>
       </main>
 

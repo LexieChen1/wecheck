@@ -97,31 +97,28 @@ export default function AddHouse() {
             </p>
             <button
               onClick={async () => {
-                if (
-                  !confirm(
-                    "Are you sure you want to leave this house? This will delete all house data if you're the only member."
-                  )
-                ) {
-                  return;
+                if (!confirm("Are you sure you want to leave this house?")){
+                    return; 
                 }
 
                 try {
                   const token = await currentUser.getIdToken();
                   const res = await fetch("http://localhost:5001/api/houses/leave-house", {
                     method: "PATCH",
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers: { 
+                      Authorization: `Bearer ${token} `, 
+                      "Content-Type": "application/json", 
+                     },
                   });
 
                   if (!res.ok) {
                     throw new Error("Failed to leave house");
                   }
-
-                  const data = await res.json();
-                  alert(data.message);
-                  setCurrentHouse(null);
+              
+                  // Refresh house info after leaving
+                  await fetchHouse(currentUser);
                 } catch (err) {
                   console.error("Error leaving house:", err);
-                  alert("Failed to leave house. Please try again.");
                 }
               }}
               className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"

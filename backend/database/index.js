@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Database connection
-const pool = new Pool({
+export const pool = new Pool({
     user: process.env.DB_USER || 'gameon_user',
     host: process.env.DB_HOST || 'localhost',
     database: process.env.DB_NAME || 'gameon',

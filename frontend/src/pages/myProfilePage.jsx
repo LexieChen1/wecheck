@@ -270,7 +270,7 @@ export default function MyProfile() {
 
       {/* House Information */}
       {houseInfo && (
-        <div className="bg-yellow-50 border rounded-lg p-4">
+        <div className="bg-white border rounded-lg p-4">
           <h3 className="text-lg font-medium text-black mb-3">🏡 My House Information</h3>
           <div className="space-y-2">
             <div className="flex justify-between items-center">

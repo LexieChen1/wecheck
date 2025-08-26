@@ -1,5 +1,5 @@
 import express from "express";
-import { authenticateUser as verifyToken } from "../middleware/auth.js";
+import verifyToken from "../middleware/auth.js";
 import pool from "../../database/index.js";
 import { nanoid } from "nanoid";
 
@@ -75,44 +75,14 @@ router.patch('/leave-house', verifyToken, async (req, res) => {
       return res.status(400).json({ error: "User is not in a house" });
     }
     
-    const houseId = userResult.rows[0].house_id;
-    
-    // Check if this user is the only member of the house
-    const membersResult = await pool.query(
-      "SELECT COUNT(*) as member_count FROM users WHERE house_id = $1",
-      [houseId]
-    );
-    
-    const memberCount = parseInt(membersResult.rows[0].member_count);
-    
-    if (memberCount === 1) {
-      // If this is the only member, delete the entire house and all related data
-      console.log(`Deleting house ${houseId} and all associated data`);
-      
-      // Delete bills related to this house
-      await pool.query("DELETE FROM bills WHERE house_id = $1", [houseId]);
-      
-      // Delete bill_splits related to this house (if any)
-      await pool.query(
-        "DELETE FROM bill_splits WHERE bill_id IN (SELECT id FROM bills WHERE house_id = $1)",
-        [houseId]
-      );
-      
-      // Remove user from house
-      await pool.query("UPDATE users SET house_id = NULL WHERE uid = $1", [uid]);
-      
-      // Delete the house itself
-      await pool.query("DELETE FROM houses WHERE id = $1", [houseId]);
-      
-      res.json({ message: "Left house and deleted all house data" });
-    } else {
-      // If there are other members, just remove this user from the house
-      await pool.query("UPDATE users SET house_id = NULL WHERE uid = $1", [uid]);
-      res.json({ message: "Left house" });
-    }
-  } catch (err) {
-    console.error("Error leaving house:", err);
-    res.status(500).json({ error: "Failed to leave house" });
+    await pool.query(
+      "UPDATE users SET house_id = NULL WHERE uid = $1", 
+      [uid]
+    ); 
+    res.json({ message: "User successfully left the house" }); 
+  } catch (err){
+    console.error("Error leaving house:", err); 
+    res.status(500).json({ error:  "Failed to leave house"}); 
   }
 });
 

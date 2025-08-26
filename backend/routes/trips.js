@@ -5,7 +5,7 @@ import authenticateUser from "../middleware/auth.js";
 const router = express.Router();
 
 //add trip 
-router.post('/add', async (req, res) => {
+router.post('/add', authenticateUser, async (req, res) => {
   const createdBy = req.user.uid; 
   const { name, description, start_date, end_date, amount, people } = req.body;
 

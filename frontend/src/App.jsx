@@ -5,7 +5,6 @@ import Signup from './pages/signupPage.jsx';
 import Dashboard from './pages/dashboardPage.jsx';
 import Layout from "./components/ui/layout.jsx";
 import Login from "./pages/loginPage.jsx";
-import TripDetails from "./pages/tripDetails.jsx";
 import AddHouse from "./pages/addHousePage.jsx";
 import HouseDashboard from './pages/houseDashboard.jsx';
 import JoinHouse from './pages/joinHousePage.jsx';
@@ -26,7 +25,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/addHouse" element={<AddHouse />} />
           <Route path="/joinHouse" element={<JoinHouse />} />
-          <Route path="/trip/:id" element={<TripDetails />} />
           <Route path="/house" element={<HouseDashboard />} />
           <Route path="/myHouse" element={<MyHouse />} />
           <Route path="/myProfile" element={<MyProfile />} />
