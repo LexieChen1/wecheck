@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { downloadICS } from "../components/ui/calendarUtils";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import axios from "axios"; 
 
 export default function MyHouse() {
   const [houseData, setHouseData] = useState(null);
   const [chores, setChores] = useState([]);
   const [bills, setBills] = useState([]);
-  const userId = localStorage.getItem("user_id");
-  const [newBill, setNewBill] = useState({ description: "", amount: "", dueDate: "" });
-  const [takenChores, setTakenChores] = useState({});
   const [members, setMembers] = useState([]);
   const [userUid, setUserUid] = useState(null);
 
@@ -21,10 +16,9 @@ export default function MyHouse() {
   const [newNote, setNewNote] = useState("");
   const [buyList, setBuyList] = useState([]);
   const [newBuyItem, setNewBuyItem] = useState("");
-  const [paidBills, setPaidBills] = useState({});
-  const currentUser = "me"; 
-
-
+  const [newBillDescription, setNewBillDescription] = useState("");
+  const [newBillAmount, setNewBillAmount] = useState("");
+  const [newBillDueDate, setNewBillDueDate] = useState("");
 
   useEffect(() => {
     const auth = getAuth();
@@ -65,6 +59,8 @@ export default function MyHouse() {
       await fetchChores(token, houseInfo);
       await fetchNotes(token, houseInfo);
       await fetchBuyList(token, houseInfo);
+      await fetchBills(token); 
+
 
     } catch (err) {
       console.error("Failed to fetch house data:", err);
@@ -258,8 +254,6 @@ export default function MyHouse() {
     }
   };
 
-
-
   // Filter chores for different sections
   const availableChores = chores.filter(chore => !chore.assigned_to_uid);
   const myChores = chores.filter(chore => chore.assigned_to_uid === userUid);
@@ -417,57 +411,80 @@ export default function MyHouse() {
     }
   };
 
-  const handleAddBill = async () => {
+  const addBill = async () => {
+    if (!newBillDescription || !newBillAmount || !newBillDueDate) return;
+  
     try {
-      await axios.post("/api/house/add-bill", newBill, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      const auth = getAuth(); 
+      const user = auth.currentUser; 
+      if (!user) throw new Error("User not logged in");
+  
+      const token = await user.getIdToken(); 
+  
+      const res = await fetch("http://localhost:5001/api/bills", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json", 
+          Authorization: `Bearer ${token}`, 
+        },
+        body: JSON.stringify({
+          description: newBillDescription,
+          amount: Number(newBillAmount),
+          due_date: newBillDueDate, 
+        }),
       });
-      setBills([...bills, newBill]);
-      setNewBill({ description: "", amount: "", dueDate: "" });
+  
+      if (!res.ok) throw new Error("Failed to add bill");
+      const addedBill = await res.json();
+  
+      setBills((prev) => [...prev, addedBill]);
+      setNewBillDescription("");
+      setNewBillAmount("");
+      setNewBillDueDate("");
     } catch (err) {
-      console.error("Failed to add bill:", err);
+      console.error("Error adding bill:", err);
     }
   };
 
+  const fetchBills = async (token) => {
+    try {
+      const res = await fetch("http://localhost:5001/api/bills/upcoming", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("Failed to fetch bills");
+      const data = await res.json();
+      setBills(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error fetching bills:", err);
+    }
+  };
+
+  const deleteBill = async (billId) => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const token = await user.getIdToken();
+      const res = await fetch(`http://localhost:5001/api/bills/${billId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.ok) {
+        await fetchBills(token);
+      } else {
+        console.error("Failed to delete bill:", res.status);
+      }
+    } catch (err) {
+      console.error("Error deleting bill:", err);
+    }
+  };
+  
+
   return (
-    <div className="flex flex-wrap justify-center gap-6 mt-6">
-      
-      {/* Join Code */}
-      {houseData?.invite_code && (
-        <Section title="Join Code">
-          <p className="text-xl font-bold text-gray-800">{houseData.invite_code}</p>
-          <p className="text-sm text-gray-500">Share this code with others to join your house</p>
-        </Section>
-      )}
-
-      {/* Members */}
-      <Section title="Members">
-        <ul className="text-gray-700 space-y-1">
-        {members.length === 0 ? (
-          <li className="italic text-gray-500">No members found</li>
-        ) : (
-          members.map((m, idx) => (
-            <li key={idx}>
-              {m.first_name || 'Unknown'} {m.last_name || 'User'} {m.phone && `(${m.phone})`}
-            </li>
-          ))
-        )}
-        </ul>
-      </Section>
-
-      {/* Lease Dates */}
-      <Section title="Lease Dates">
-        <p className="text-gray-700">Start: <strong>{leaseStart ? new Date(leaseStart).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        }) : 'N/A'}</strong></p>
-        <p className="text-gray-700">End: <strong>{leaseEnd ? new Date(leaseEnd).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        }) : 'N/A'}</strong></p>
-      </Section>
+    <div className="min-h-screen w-full px-6 sm:px-8 lg:px-12 xl:px-20 py-8 pb-28">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-2">
 
       {/* Available Chores */}
       <Section title="Available Chores">
@@ -476,7 +493,7 @@ export default function MyHouse() {
             <li className="italic text-gray-500">No available chores</li>
           ) : (
             availableChores.map((chore) => (
-              <li key={chore.id} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+              <li key={chore.id} className="flex justify-between items-center p-3 rounded-lg border border-gray-100 bg-white">
                 <div>
                   <span className="font-medium">{chore.name}</span>
                   <br />
@@ -501,7 +518,7 @@ export default function MyHouse() {
             onChange={(e) => setNewChore(e.target.value)}
             className="border p-2 rounded w-full"
             placeholder="Add a new chore..."
-            onKeyPress={(e) => e.key === 'Enter' && addChore()}
+            onKeyDown={(e) => e.key === 'Enter' && addChore()}
           />
           <button
             onClick={addChore}
@@ -519,7 +536,7 @@ export default function MyHouse() {
             <li className="italic text-gray-500">No chores assigned to you yet.</li>
           ) : (
             myChores.map((chore) => (
-              <li key={chore.id} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+              <li key={chore.id} className="flex justify-between items-center p-3 rounded-lg border border-gray-100 bg-white">
                 <div>
                   <span className="font-medium">{chore.name}</span>
                   <br />
@@ -546,9 +563,66 @@ export default function MyHouse() {
           )}
         </ul>
       </Section>
+      
+      {/* Bills */}
+      <Section title="Bills">
+        <ul className="text-gray-700 space-y-2">
+          {bills.length === 0 ? (
+            <li className="italic text-gray-500">No bills yet</li>
+          ) : (
+            bills.map((bill) => (
+              <li key={bill.id} className="p-3 rounded-lg border border-blue-100 bg-blue-50/40">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <p className="text-gray-800">
+                      {bill.description} – ${bill.amount}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Due {new Date(bill.due_date).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => deleteBill(bill.id)}
+                    className="text-xs text-red-500 hover:text-red-700 ml-2"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </li>
+            ))
+          )}
+        </ul>
 
-
-
+        {/* Add Bill Form */}
+        <div className="mt-4 flex flex-col space-y-2">
+          <input
+            type="text"
+            value={newBillDescription}
+            onChange={(e) => setNewBillDescription(e.target.value)}
+            className="border p-2 rounded w-full"
+            placeholder="Bill description (e.g. Electricity)"
+          />
+          <input
+            type="number"
+            value={newBillAmount}
+            onChange={(e) => setNewBillAmount(e.target.value)}
+            className="border p-2 rounded w-full"
+            placeholder="Amount"
+          />
+          <input
+            type="date"
+            value={newBillDueDate}
+            onChange={(e) => setNewBillDueDate(e.target.value)}
+            className="border p-2 rounded w-full"
+          />
+          <button
+            onClick={addBill}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Add
+          </button>
+        </div>
+      </Section>
 
       {/* Buy List */}
       <Section title="Buy List">
@@ -557,7 +631,7 @@ export default function MyHouse() {
             <li className="italic text-gray-500">No items to buy yet</li>
           ) : (
             buyList.map((item) => (
-              <li key={item.id} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+              <li key={item.id} className="flex justify-between items-center p-3 rounded-lg border border-gray-100 bg-white">
                 <div className="flex-1">
                   <span className={item.is_purchased ? "line-through text-gray-400 font-medium" : "font-medium"}>
                     {item.item}
@@ -601,7 +675,7 @@ export default function MyHouse() {
             onChange={(e) => setNewBuyItem(e.target.value)}
             className="border p-2 rounded w-full"
             placeholder="Add item to buy..."
-            onKeyPress={(e) => e.key === 'Enter' && addBuyItem()}
+            onKeyDown={(e) => e.key === 'Enter' && addBuyItem()}
           />
           <button
             onClick={addBuyItem}
@@ -619,7 +693,7 @@ export default function MyHouse() {
             <li className="italic text-gray-500">No notes yet</li>
           ) : (
             notes.map((note) => (
-              <li key={note.id} className="p-2 bg-gray-50 rounded border-l-4 border-blue-500">
+              <li key={note.id} className="p-3 rounded-lg border border-gray-100 bg-white">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <p className="text-gray-800">{note.content}</p>
@@ -647,7 +721,7 @@ export default function MyHouse() {
             onChange={(e) => setNewNote(e.target.value)}
             className="border p-2 rounded w-full"
             placeholder="Add a house note..."
-            onKeyPress={(e) => e.key === 'Enter' && addNote()}
+            onKeyDown={(e) => e.key === 'Enter' && addNote()}
           />
           <button
             onClick={addNote}
@@ -657,14 +731,15 @@ export default function MyHouse() {
           </button>
         </div>
       </Section>
+      </div>
     </div>
   );
 }
 
 function Section({ title, children }) {
   return (
-    <div className="bg-white w-80 rounded-2xl shadow-lg p-6 space-y-4 border border-gray-100">
-      <h2 className="text-lg font-poppins text-black">{title}</h2>
+    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 space-y-4">
+      <h2 className="text-base font-semibold text-gray-900">{title}</h2>
       {children}
     </div>
   );
