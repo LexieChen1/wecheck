@@ -30,7 +30,7 @@ export default function LandingPage() {
       </header>
 
       <main className="flex flex-col items-center justify-center flex-grow px-4 bg-white bg-opacity-80">
-      <p className="text-1xl font-sans text-forest mb-3">YOUR NEW LIFE AGENT</p>
+      <p className="text-1xl font-sans text-forest mb-3">LIVE STRESSFREE</p>
       {/* main statement with highlights*/}
       <p className="text-5xl font-mono font-black text-black mb-2">
         Share smarter.
