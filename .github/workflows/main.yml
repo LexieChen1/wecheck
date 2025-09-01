@@ -24,13 +24,13 @@ jobs:
       run: npm install
 
     - name: Build frontend
-      working-directory: frontend
       run: |
         if [ -f package.json ]; then
           npm run build || echo "Frontend build failed"
         else
           echo "No frontend package.json found"
         fi
+        working-directory: ./frontend
 
     - name: Install backend deps
       working-directory: ./backend
