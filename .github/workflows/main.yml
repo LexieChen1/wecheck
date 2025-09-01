@@ -30,7 +30,7 @@ jobs:
         else
           echo "No frontend package.json found"
         fi
-        working-directory: ./frontend
+      working-directory: ./frontend
 
     - name: Install backend deps
       working-directory: ./backend
