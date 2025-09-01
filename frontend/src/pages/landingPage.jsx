@@ -57,7 +57,7 @@ export default function LandingPage() {
       </p>
       </main>
 
-      <footer className="text-center p-4 text-sm text-gray-500 bg-white bg-opacity-80">© 2025 WeCheck. All rights reserved.</footer>
+      <footer className="text-center p-4 text-sm text-gray-500 bg-white bg-opacity-80">© 2025 LexieC. All rights reserved.</footer>
     </div>
   );
 }
